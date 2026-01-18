@@ -15,14 +15,22 @@ class CalculatorVM {
         let billPublisher: AnyPublisher<Double, Never>
         let tipPublisher: AnyPublisher<Tip, Never>
         let splitPublisher: AnyPublisher<Int, Never>
+        let logoViewTapPublisher: AnyPublisher<Void, Never>
     }
     
     struct Output {
-// let updateViewPublisher: AnyPublisher<(Double, Double, Double)>
-       let updateViewPublisher: AnyPublisher<Result, Never>
+        // let updateViewPublisher: AnyPublisher<(Double, Double, Double)>
+        let updateViewPublisher: AnyPublisher<Result, Never>
+        let resetCalculatorPublisher: AnyPublisher<Void, Never>
     }
     
     private var cancellables = Set<AnyCancellable>()
+    private let audioPlayerService: AudioPlayerService
+    
+    init(audioPlayerService: AudioPlayerService = DefaultAudioPlayer()) {
+        
+        self.audioPlayerService = audioPlayerService
+    }
     
     func transform(input: Input) -> Output {
         
@@ -30,40 +38,46 @@ class CalculatorVM {
             input.billPublisher,
             input.tipPublisher,
             input.splitPublisher).flatMap { [unowned self] (bill, tip, split) in
-            let totalTip = getTipAmount(bill: bill, tip: tip)
-            let totalBill = bill + totalTip
-            let amountPerPerson: Double = totalBill / Double(split)
-
-        
-         let result = Result(
-                amountPerPerson: amountPerPerson,
-                totalBill: totalBill,
-                totalTip: totalTip)
-            return Just(result)
+                let totalTip = getTipAmount(bill: bill, tip: tip)
+                let totalBill = bill + totalTip
+                let amountPerPerson: Double = totalBill / Double(split)
+                
+                
+                let result = Result(
+                    amountPerPerson: amountPerPerson,
+                    totalBill: totalBill,
+                    totalTip: totalTip)
+                return Just(result)
+            }.eraseToAnyPublisher()
+        let resetCalculatorPublisher = input.logoViewTapPublisher.handleEvents(receiveOutput: { [unowned self] _ in
+            audioPlayerService.playsSound()
+        }).flatMap{
+            return Just($0)
         }.eraseToAnyPublisher()
-        return Output(updateViewPublisher: updateViewPublisher)
-/*
-        //---> test for single publisher
         
-        input.billPublisher.sink { bill in
-            print("bill: \(bill)")
-        }.store(in: &cancellables)
-
-        input.tipPublisher.sink { tip in
-            print("the tip: \(tip)")
-        }.store(in: &cancellables)
-        
-        input.splitPublisher.sink { split in
-            print("the split: \(split)")
-        }.store(in: &cancellables)
-
-        let result = Result(
-            amountPerPerson: 500,
-            totalBill: 1000,
-            totalTip: 50.0)
-        return Output(updateViewPublisher: Just(result).eraseToAnyPublisher())
-*/
-//      <----
+        return Output(updateViewPublisher: updateViewPublisher, resetCalculatorPublisher: resetCalculatorPublisher)
+        /*
+         //---> test for single publisher
+         
+         input.billPublisher.sink { bill in
+         print("bill: \(bill)")
+         }.store(in: &cancellables)
+         
+         input.tipPublisher.sink { tip in
+         print("the tip: \(tip)")
+         }.store(in: &cancellables)
+         
+         input.splitPublisher.sink { split in
+         print("the split: \(split)")
+         }.store(in: &cancellables)
+         
+         let result = Result(
+         amountPerPerson: 500,
+         totalBill: 1000,
+         totalTip: 50.0)
+         return Output(updateViewPublisher: Just(result).eraseToAnyPublisher())
+         */
+        //      <----
     }
     
     private func getTipAmount(bill: Double, tip: Tip) -> Double {
@@ -77,7 +91,7 @@ class CalculatorVM {
         case .twentyPercent:
             return bill * 0.2
         case .custom(let value):
-          return Double(value)
+            return Double(value)
         }
     }
     
