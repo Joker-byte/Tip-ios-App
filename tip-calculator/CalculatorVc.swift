@@ -65,8 +65,9 @@ class CalculatorVc: UIViewController {
         
         let output = calculatorVm.transform(input: input)
         
-        output.updateViewPublisher.sink { result in
-            print("bind result: \(result)")
+        output.updateViewPublisher.sink { [unowned self] result in
+            resultView.configure(result: result)
+          //  print("bind result: \(result)")
         }.store(in: &cancellables)
     }
 
