@@ -15,7 +15,7 @@ struct LabelFactory {
         backgroundColor: UIColor = .clear,
         textColor: UIColor = ThemeColor.text,
         textAligment: NSTextAlignment = .center
-     
+        
     ) -> UILabel {
         let label = UILabel()
         label.text = text

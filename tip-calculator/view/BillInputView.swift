@@ -7,6 +7,10 @@
 
 import UIKit
 import SnapKit
+import Combine
+import CombineCocoa
+//CombineCocoa: Creates the interface to listen the event that happening inside UI components
+
 
 class BillInputView : UIView {
     
@@ -73,13 +77,39 @@ class BillInputView : UIView {
         return textField
     }()
     
+    private var privateText: String?
+    //----> expose private text
+    /*
+    var publishText: String? {
+        return privateText
+    }
+    */
+    private let billSubject: PassthroughSubject<Double, Never> = .init()
+    
+    var valuePublisher: AnyPublisher<Double, Never> {
+        return billSubject.eraseToAnyPublisher()
+    }
+    
+    private var cancellables = Set<AnyCancellable>()
     init() {
         super.init(frame: .zero)
         layout()
+        observe()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func observe() {
+        textField.textPublisher.sink { [unowned self] text in
+            
+          //-->   privateText = text --> assign text to a private text and exposed outside by publishtext
+            
+            billSubject.send(text?.doubleValue ?? 0)
+            print("Text: \(String(describing: text))")
+            
+        }.store(in: &cancellables)
     }
     
     private func layout () {
@@ -117,3 +147,4 @@ class BillInputView : UIView {
         
     }
 }
+

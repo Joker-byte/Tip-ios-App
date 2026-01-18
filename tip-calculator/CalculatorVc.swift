@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Combine
 
 class CalculatorVc: UIViewController {
     
@@ -32,13 +33,41 @@ class CalculatorVc: UIViewController {
         return stackView
     }()
     
-
+   private let calculatorVm = CalculatorVM()
+   private var cancellables = Set<AnyCancellable>()
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         //view.backgroundColor = .yellow
-        
-        
         layout()
+        bind()
+    }
+    
+    func bind() {
+        
+//        billInputView.valuePublisher.sink { bill in
+//            print("bill: \(bill)")
+//        }.store(in: &cancellables)
+//        
+//
+   //   --->   billInputView.publishText exposed from a private text
+        let input = CalculatorVM.Input(
+            
+            
+//            billPublisher: Just(10).eraseToAnyPublisher(),
+//            tipPublisher: Just(.tenPercent).eraseToAnyPublisher(),
+//            splitPublisher: Just(5).eraseToAnyPublisher())
+
+            billPublisher: billInputView.valuePublisher,
+            tipPublisher: tipInputView.valuePublisher,
+            splitPublisher: splitInputView.valuePublisher)
+        
+        let output = calculatorVm.transform(input: input)
+        
+        output.updateViewPublisher.sink { result in
+            print("bind result: \(result)")
+        }.store(in: &cancellables)
     }
 
     func layout() {

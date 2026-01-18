@@ -79,10 +79,9 @@ class ResultView : UIView {
     }
     
     private func layout () {
-        
         backgroundColor = .white
-        
         addSubview(vStackView)
+        
         vStackView.snp.makeConstraints { make in
             make.top.equalTo(snp.top).offset(24)
             make.leading.equalTo(snp.leading).offset(24)
