@@ -94,7 +94,7 @@ class ResultView : UIView {
         text.addAttributes([
             .font: ThemeFont.bold(ofSize: 24)
         ],
-             range: NSMakeRange(3, 3))
+             range: NSMakeRange(0, 1))
         amountPerPersonLabel.attributedText = text
         
         totalBillView.configure(amount: result.totalBill)
