@@ -28,6 +28,7 @@ class ResultView : UIView {
             ],
             range: NSMakeRange(0,1))
         label.attributedText = text
+        label.accessibilityIdentifier = ScreenIdentifier.ResultView.totalAmountPerPersonValueLabel.rawValue
         return label
     }()
     //Separator View
@@ -55,14 +56,16 @@ class ResultView : UIView {
     private let totalBillView: AmountView = {
         let view =  AmountView(
             title: "Total Bill",
-            textAligment: .left)
+            textAligment: .left,
+            amountLabelIdentifier: ScreenIdentifier.ResultView.totalBillValueLabel.rawValue)
         return view
     }()
     
     private let totalTipView: AmountView = {
         let view =   AmountView(
             title: "Total tip",
-            textAligment: .right)
+            textAligment: .right,
+            amountLabelIdentifier: ScreenIdentifier.ResultView.totalTipValueLabel.rawValue)
         return view
     }()
     
