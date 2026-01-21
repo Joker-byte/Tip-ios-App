@@ -119,3 +119,23 @@ Main Target:
       - https://stackoverflow.com/a/45297466/6181721
 ////////    ----------    /////////
 
+
+ 32
+   - Add UI Tests
+      - Test user interface - how screen elements interact with         the business logic
+      - Write our first test- TestResultViewDefaultValues
+
+ 34
+   - Add all identifiers
+
+ 35
+   - Add all screen elements
+   - https://www.hackingwithswift.com/articles/148/xcode-ui-testing-cheat-sheet
+
+ 36
+   - Test regular tip flow
+      - Bill $100, tip 10/15/20%, Split 4/2
+
+ 37
+   - Test custom tip flow
+   - Test reset
