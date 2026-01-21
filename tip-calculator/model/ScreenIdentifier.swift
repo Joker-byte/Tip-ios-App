@@ -10,8 +10,7 @@ import Foundation
 enum ScreenIdentifier {
     
     enum LogoView: String{
-        case LogoView
-        
+        case logoView
     }
     
     enum ResultView: String {
@@ -29,6 +28,7 @@ enum ScreenIdentifier {
         case fifteenPercentButton
         case twentyPercentButton
         case customTipButton
+        case customTipAlertTextField
     }
     
     enum SplitInputView: String {
