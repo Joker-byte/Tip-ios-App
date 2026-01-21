@@ -111,6 +111,7 @@ Main Target:
 
 
 ////////    ----------    /////////
+
 30
    - Add image snapshot tests
       - unit tests for views
@@ -120,7 +121,7 @@ Main Target:
    - Add snapshot test with custom values
       - https://stackoverflow.com/a/45297466/6181721
 
-      
+
 ////////    ----------    /////////
 
 
